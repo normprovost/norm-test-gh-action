@@ -1,0 +1,34 @@
+name: Norm Test Workflow
+
+on:
+  pull_request: {}
+
+jobs:
+  comment_on_findings:
+    name: Add a comment to the first line of a PR
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Comment on file
+        uses: actions/github-script@v6
+        env:
+          SHA: '${{ github.event.pull_request.head.sha }}'
+        with:
+          script: |
+            const {SHA} = process.env
+            const fs = require('fs');
+
+            const body = 'HEY HEY HEY';
+            const path = 'index.js';
+            const line = 1;
+            github.rest.pulls.createReviewComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: body,
+              commit_id: `${SHA}`,
+              path: path,
+              line: line
+            });
