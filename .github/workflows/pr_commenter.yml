@@ -4,10 +4,18 @@ on:
   pull_request: {}
 
 jobs:
-  comment_on_findings:
-    name: Add a comment to the first line of a PR
-    runs-on: ubuntu-latest
+  generate_results:
+  comment_on_results:
     if: github.event_name == 'pull_request'
+    needs: generate_results
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arrays: [
+          {name: "one", digit: "1"},
+          {name: "two", digit: "2"},
+          {name: "three", digit: "3"}
+        ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -15,23 +23,16 @@ jobs:
         uses: actions/github-script@v6
         env:
           SHA: '${{ github.event.pull_request.head.sha }}'
+          NAME: ${{ matrix.arrays.name }}
+          DIGIT: ${{ matrix.arrays.digit }}
         with:
           script: |
-            const {SHA} = process.env
+            const {SHA, NAME, DIGIT} = process.env
             const fs = require('fs');
 
-            const body = 'HEY HEY HEY';
+            const body = `HEY HEY HEY ${NAME} ${DIGIT}`;
             const path = 'index.js';
             const line = 1;
-            github.rest.pulls.createReviewComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number,
-              body: body,
-              commit_id: `${SHA}`,
-              path: path,
-              line: line
-            });
             github.rest.pulls.createReviewComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
