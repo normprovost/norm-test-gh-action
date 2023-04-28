@@ -32,6 +32,15 @@ jobs:
                 path: path,
                 line: line
               });
+              await github.rest.pulls.createReviewComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                body: body,
+                commit_id: `${SHA}`,
+                path: path,
+                line: line
+              });
             }
 
             createComments();
