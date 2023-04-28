@@ -4,16 +4,24 @@ on:
   pull_request: {}
 
 jobs:
+  generate_results:
+    name: Generate results
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    outputs:
+       results: ${{ steps.setmatrix.outputs.results }}
+    steps:
+      - name: Set Dynamic Matrix
+        id: setmatrix
+        run: |
+           matrixStringifiedObject="{\"include\":[{\"message\":\"message1\",\"line\":1},{\"message\":\"message2\",\"line":1}]}"
+           echo "::set-output name=results::$matrixStringifiedObject"
   comment_on_results:
     if: github.event_name == 'pull_request'
+    needs: generate_results
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        arrays: [
-          {name: "one", digit: "1"},
-          {name: "two", digit: "2"},
-          {name: "three", digit: "3"}
-        ]
+      matrix: ${{ fromJson(needs.generate_results.outputs.results) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -21,14 +29,14 @@ jobs:
         uses: actions/github-script@v6
         env:
           SHA: '${{ github.event.pull_request.head.sha }}'
-          NAME: ${{ matrix.arrays.name }}
-          DIGIT: ${{ matrix.arrays.digit }}
+          MESSAGE: ${{ matrix.message }}
+          LINE: ${{ matrix.line }}
         with:
           script: |
-            const {SHA, NAME, DIGIT} = process.env
+            const {SHA, MESSAGE, LINE} = process.env
             const fs = require('fs');
 
-            const body = `HEY :wave: \n\n ${NAME} ${DIGIT} \n\n @normprovost`;
+            const body = `HEY :wave: \n\n ${MESSAGE} \n\n @normprovost`;
             const path = 'index.js';
             const line = 1;
             github.rest.pulls.createReviewComment({
@@ -38,5 +46,5 @@ jobs:
               body: body,
               commit_id: `${SHA}`,
               path: path,
-              line: line
+              line: `${LINE}`
             });
