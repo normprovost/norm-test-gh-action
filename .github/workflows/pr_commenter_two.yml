@@ -6,7 +6,6 @@ on:
 jobs:
   comment_on_results:
     if: github.event_name == 'pull_request'
-    needs: generate_results
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
