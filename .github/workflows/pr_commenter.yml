@@ -15,7 +15,7 @@ jobs:
         id: setmatrix
         run: |
            matrixStringifiedObject="{\"include\":[{\"message\":\"message1\",\"line\":1},{\"message\":\"message2\",\"line\":1}]}"
-           echo "{results}={$matrixStringifiedObject}" >> $GITHUB_OUTPUT
+           echo "results=$matrixStringifiedObject" >> $GITHUB_OUTPUT
   comment_on_results:
     if: github.event_name == 'pull_request'
     needs: generate_results
