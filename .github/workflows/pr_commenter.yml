@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{ fromJson(needs.generate_results.outputs.results) }}
+      max-parallel: 1
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
