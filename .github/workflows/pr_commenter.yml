@@ -14,7 +14,7 @@ jobs:
       - name: Set Dynamic Matrix
         id: setmatrix
         run: |
-           matrixStringifiedObject="{\"include\":[{\"message\":\"message1\",\"line\":\"1\"},{\"message\":\"message2\",\"line":\"1\"}]}"
+           matrixStringifiedObject="{\"include\":[{\"message\":\"message1\",\"line\":1},{\"message\":\"message2\",\"line\":1}]}"
            echo "::set-output name=results::$matrixStringifiedObject"
   comment_on_results:
     if: github.event_name == 'pull_request'
