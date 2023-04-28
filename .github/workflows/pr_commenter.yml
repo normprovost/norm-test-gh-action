@@ -28,7 +28,7 @@ jobs:
             const {SHA, NAME, DIGIT} = process.env
             const fs = require('fs');
 
-            const body = `HEY HEY HEY ${NAME} ${DIGIT}`;
+            const body = `HEY :wave: \n\n ${NAME} ${DIGIT} \n\n @normprovost`;
             const path = 'index.js';
             const line = 1;
             github.rest.pulls.createReviewComment({
