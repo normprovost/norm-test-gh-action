@@ -38,7 +38,7 @@ jobs:
 
             const body = `HEY :wave: \n\n ${MESSAGE} \n\n @normprovost`;
             const path = 'index.js';
-            const line = `${LINE}`;
+            const line = parseInt(`${LINE}`);
             github.rest.pulls.createReviewComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
