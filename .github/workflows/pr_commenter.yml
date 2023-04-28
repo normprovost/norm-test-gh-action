@@ -17,7 +17,8 @@ jobs:
         with:
           script: |
             result_string = '[{"message":"User controlled data in methods like `innerHTML`, `outerHTML` or `document.write` is an anti-pattern that can lead to XSS vulnerabilities","path":"index.js","line":1},{"message":"User controlled data in methods like `innerHTML`, `outerHTML` or `document.write` is an anti-pattern that can lead to XSS vulnerabilities","path":"index.js","line":1},{"message":"User controlled data in methods like `innerHTML`, `outerHTML` or `document.write` is an anti-pattern that can lead to XSS vulnerabilities","path":"index.js","line":1}]'
-            console.log('::set-output name=results::' + result_string)
+            core.setOutput('results', result_string)
+            # console.log('::set-output name=results::' + result_string)
   comment_on_results:
     if: github.event_name == 'pull_request'
     needs: generate_results

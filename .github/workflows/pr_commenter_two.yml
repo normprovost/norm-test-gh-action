@@ -1,0 +1,38 @@
+name: Norm Test Workflow
+
+on:
+  pull_request: {}
+
+jobs:
+  comment_on_results:
+    if: github.event_name == 'pull_request'
+    needs: generate_results
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Comment on file
+        uses: actions/github-script@v6
+        env:
+          SHA: '${{ github.event.pull_request.head.sha }}'
+        with:
+          script: |
+            const {SHA} = process.env
+            const fs = require('fs');
+
+            const body = `HEY :wave: \n\n this is a message \n\n @normprovost`;
+            const path = 'index.js';
+            const line = 1;
+            async function createComments() {
+              await github.rest.pulls.createReviewComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                body: body,
+                commit_id: `${SHA}`,
+                path: path,
+                line: line
+              });
+            }
+
+            createComments();
