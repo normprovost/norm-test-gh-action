@@ -4,10 +4,8 @@ on:
   pull_request: {}
 
 jobs:
-  generate_results:
   comment_on_results:
     if: github.event_name == 'pull_request'
-    needs: generate_results
     runs-on: ubuntu-latest
     strategy:
       matrix:
